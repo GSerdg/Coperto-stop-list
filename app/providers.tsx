@@ -2,6 +2,7 @@
 
 import { DefaultOptions, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 export function Providers({ children }: { children: ReactNode }) {
   const queryConfig: DefaultOptions = {
@@ -14,5 +15,9 @@ export function Providers({ children }: { children: ReactNode }) {
 
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: queryConfig }));
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    </NuqsAdapter>
+  );
 }
