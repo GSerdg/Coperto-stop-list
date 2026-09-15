@@ -1,7 +1,5 @@
 import { parseAsStringEnum, useQueryStates } from 'nuqs';
-import { Shop } from '@/types/menu';
-
-export type StatusFilter = 'all' | 'active' | 'stopped';
+import { Shop, StatusFilter } from '@/types/menu';
 
 export const menuFiltersParsers = {
   shop: parseAsStringEnum<Shop>(['kitchen', 'bar', 'pastry']),

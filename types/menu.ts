@@ -27,3 +27,5 @@ export type StopItemPayload = {
   reason: StopReason;
   until: string | null;
 };
+
+export type StatusFilter = 'all' | 'active' | 'stopped';
