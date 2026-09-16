@@ -1,19 +1,8 @@
-import { menuFiltersParsers } from '@/features/stop-list/model/filters';
-import { Filters } from '@/features/stop-list/ui';
-import { createSearchParamsCache, type SearchParams } from 'nuqs/server';
+import { Filters, StopListTable } from '@/features/stop-list/ui';
+import { type SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 
-const searchParamsCache = createSearchParamsCache(menuFiltersParsers);
-
-interface Props {
-  searchParams: Promise<SearchParams>;
-}
-
-export default async function Page({ searchParams }: Props) {
-  const resolvedSearchParams = await searchParams;
-
-  const { shop, status } = searchParamsCache.parse(resolvedSearchParams);
-
+export default async function Page() {
   return (
     <main className="mx-auto min-h-screen max-w-[1280px] px-6 py-8">
       <header className="border-brand-text/10 mb-8 flex items-center justify-between border-b pb-6">
@@ -34,19 +23,9 @@ export default async function Page({ searchParams }: Props) {
       </header>
 
       <div className="space-y-6">
-        <Suspense
-          fallback={
-            <div className="border-brand-text/10 animate-pulse-light flex flex-col gap-5 border-b pb-6 md:flex-row md:items-center md:justify-between">
-              <div className="bg-brand-text/5 h-14 w-64 rounded-xl"></div>
-              <div className="bg-brand-text/5 h-14 w-64 rounded-xl"></div>
-            </div>
-          }
-        >
-          <Filters />
-        </Suspense>
-
+        <Filters />
         <div className="border-brand-text/5 rounded-xl border bg-white p-8 shadow-xs">
-          <p className="text-brand-text/40 text-xs italic">Menu table</p>
+          <StopListTable />
         </div>
       </div>
     </main>
