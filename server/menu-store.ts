@@ -6,7 +6,11 @@ const initialMenu: MenuItem[] = [
     title: 'Стейк Рибай',
     shop: 'kitchen',
     stock: 15,
-    status: { kind: 'available' },
+    status: {
+      kind: 'stopped',
+      reason: 'out_of_stock',
+      until: null,
+    },
     updatedAt: new Date().toISOString(),
   },
   {

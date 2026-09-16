@@ -2,6 +2,7 @@ import { Show } from '@/shared/ui';
 import { MenuItem, Shop } from '@/types/menu';
 import { FC } from 'react';
 import { TableHeader } from './TableHeader';
+import { useStopItem } from '../../model/useStopItem';
 
 const SHOP_LABELS: Record<Shop, string> = {
   kitchen: 'Кухня',
@@ -21,6 +22,8 @@ type Props = {
 };
 
 export const Table: FC<Props> = ({ items }) => {
+  const { resumeItem, mutatingIds } = useStopItem();
+
   return (
     <div className="custom-scrollbar overflow-x-auto">
       <table className="w-full border-collapse text-left">
@@ -29,15 +32,23 @@ export const Table: FC<Props> = ({ items }) => {
           {items.map((item) => {
             const isStopped = item.status.kind === 'stopped';
             const isOutOfStock = item.stock === 0;
+            const isSaving = mutatingIds.has(item.id);
 
             return (
               <tr
                 key={item.id}
-                className={`border-brand-text/5 border-b transition-opacity duration-200 ${
+                className={`border-brand-text/5 border-b transition-all duration-200 ${
                   isStopped ? 'bg-brand-text/1 opacity-50' : ''
-                }`}
+                } ${isSaving ? 'animate-pulse-light' : ''}`}
               >
-                <td className="text-brand-text py-4 pr-4 font-medium">{item.title}</td>
+                <td className="text-brand-text py-4 pr-4 font-medium">
+                  {item.title}
+                  <Show when={isSaving}>
+                    <span className="bg-brand-text/10 text-brand-text/60 animate-pulse rounded px-1.5 py-0.5 font-mono text-[10px] font-medium">
+                      сохраняется...
+                    </span>
+                  </Show>
+                </td>
                 <td className="text-brand-text/70 p-4 text-sm">{SHOP_LABELS[item.shop]}</td>
                 <td className="p-4 font-mono text-sm">
                   <span
@@ -80,22 +91,39 @@ export const Table: FC<Props> = ({ items }) => {
                   <Show
                     when={isStopped}
                     fallback={
-                      <button className="bg-brand-accent hover:bg-brand-accent/90 cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all">
+                      <button
+                        disabled={isSaving}
+                        onClick={() => console.log('Открыть панель', item.id)}
+                        className={`bg-brand-accent inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all ${
+                          isSaving
+                            ? 'bg-brand-accent/50 cursor-wait'
+                            : 'hover:bg-brand-accent/90 cursor-pointer'
+                        }`}
+                      >
+                        <Show when={isSaving}>
+                          <span className="btn-spinner text-xs" />
+                        </Show>
                         В стоп-лист
                       </button>
                     }
                   >
                     <button
-                      disabled={isOutOfStock}
+                      disabled={isOutOfStock || isSaving}
+                      onClick={() => resumeItem(item.id)}
                       title={
                         isOutOfStock ? 'Нельзя вернуть в продажу при нулевом остатке' : undefined
                       }
-                      className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+                      className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                         isOutOfStock
                           ? 'border-brand-text/10 text-brand-text/30 bg-brand-text/2 cursor-not-allowed'
-                          : 'border-brand-text/20 text-brand-text hover:bg-brand-text/5 cursor-pointer'
+                          : isSaving
+                            ? 'border-brand-text/10 text-brand-text/40 bg-brand-text/2 cursor-wait'
+                            : 'border-brand-text/20 text-brand-text hover:bg-brand-text/5 cursor-pointer'
                       }`}
                     >
+                      <Show when={isSaving}>
+                        <span className="btn-spinner text-xs" />
+                      </Show>
                       Вернуть в продажу
                     </button>
                   </Show>
