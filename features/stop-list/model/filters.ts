@@ -1,4 +1,5 @@
-import { parseAsStringEnum, useQueryStates } from 'nuqs';
+import { parseAsStringEnum } from 'nuqs/server';
+import { useQueryStates } from 'nuqs';
 import { Shop, StatusFilter } from '@/types/menu';
 
 export const menuFiltersParsers = {
