@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultOptions, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
+import { Suspense, useState, type ReactNode } from 'react';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -16,8 +16,10 @@ export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: queryConfig }));
 
   return (
-    <NuqsAdapter>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-    </NuqsAdapter>
+    <Suspense fallback={null}>
+      <NuqsAdapter>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </NuqsAdapter>
+    </Suspense>
   );
 }

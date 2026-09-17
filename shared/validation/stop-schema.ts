@@ -20,11 +20,8 @@ export const stopItemSchema = z.object({
         if (Number.isNaN(ts)) return false;
 
         const now = Date.now();
-        // 1. Время должно быть в будущем
         if (ts <= now) return false;
-        // 2. Не больше чем на 24 часа вперёд
         if (ts - now > MAX_AHEAD_MS) return false;
-        // 3. Шаг — 15 минут
         if (ts % STEP_MS !== 0) return false;
 
         return true;
