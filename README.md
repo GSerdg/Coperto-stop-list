@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Панель управления стоп-листом кухни (Coperto)
 
-## Getting Started
+Интерактивный десктопный интерфейс для менеджеров зала и шеф-поваров, предназначенный для оперативного управления стоп-листом позиций меню смены.
 
-First, run the development server:
+## Технологии
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Next.js 16 App Router
+- React 19 + TypeScript
+- Tailwind CSS
+- TanStack Query
+- Zustand
+- Nuqs
+- React Hook Form + Zod
+- Framer Motion
+- Sonner для уведомлений
+- Vaul для drawer/panel
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Быстрый запуск
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Установка зависимостей:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Запуск сервера разработки:**
+   ```bash
+   npm run dev
+   ```
+   Приложение будет доступно по адресу `http://localhost:3000`.
 
-## Learn More
+3. **Проверка линтера (Strict-режим):**
+   ```bash
+   npm run lint
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Продуктовая сборка проекта:**
+   ```bash
+   npm run build
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Архитектура и граница между клиентом и сервером
 
-## Deploy on Vercel
+- Серверная часть отвечает за исходные данные, route handlers и инициализацию URL-параметров через `searchParams` в App Router.
+- Клиентская часть отвечает за запросы, изменения фильтров и взаимодействие с пользователем.
+- Все запросы и мутации инкапсулированы в слое `features/stop-list/model`, а UI-компоненты работают только с уже подготовленными данными и событиями.
+- Состояние фильтров читается и записывается через URL, фильтрация переживает перезагрузку страницы и корректно работает с кнопкой “назад”.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗️ Архитектурные решения и особенности реализации
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Безопасная синхронизация состояния с URL (`nuqs` + `TanStack Query`)
+* Состояние фильтров цехов (`shop`) и статусов блюд (`status`) декларативно привязано к URL-параметрам с помощью библиотеки `nuqs`.
+* Фильтры интегрированы напрямую в структуру иерархических ключей кэша (Query Key Factory) в TanStack Query. Изменение параметров в URL автоматически инициирует запрос данных для нужной вкладки, предотвращая Race Conditions.
+
+### 2. Сквозная валидация данных (`Zod`)
+* Схема ограничений параметров стоп-листа (`shared/validation/stop-schema.ts`) вынесена в общую директорию. Она переиспользуется на **клиенте** (для мгновенной валидации полей ввода в React Hook Form) и на **сервере** (внутри Route Handlers) для обеспечения целостности данных.
+
+### 3. Управление формой реализовано с помощью React Hook Form
+* Решение позволяет инициализировать форму данными и управлять полями, состоянием и валидацией.
+
+
+
+## Что можно доделать/переделать
+* Unit tests
+* Доработать отображение скелетонов, появляющихся сообщений, которые приводят к сдвигу контента
+* Возможно, в рамках оптимистичного обновления, стоит раньше закрывать модалку.
