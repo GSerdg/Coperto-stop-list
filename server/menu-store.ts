@@ -118,9 +118,19 @@ export const menuStore = {
 
     if (itemIndex === -1) return null;
 
+    const currentItem = globalMenuStore[itemIndex];
+    const nextStatus: Extract<MenuItemStatus, { kind: 'stopped' }> =
+      currentItem.status.kind === 'stopped'
+        ? {
+            kind: 'stopped',
+            reason: stopStatus.reason,
+            until: stopStatus.until,
+          }
+        : stopStatus;
+
     globalMenuStore[itemIndex] = {
-      ...globalMenuStore[itemIndex],
-      status: stopStatus,
+      ...currentItem,
+      status: nextStatus,
       updatedAt: new Date().toISOString(),
     };
 

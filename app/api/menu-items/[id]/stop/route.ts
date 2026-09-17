@@ -34,6 +34,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     const { reason, until } = validation.data;
 
+    const existingItem = menuStore.getAll().find((item) => item.id === id);
+
     const updatedItem = menuStore.stopItem(id, {
       kind: 'stopped',
       reason,
@@ -42,6 +44,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     if (!updatedItem) {
       return NextResponse.json({ message: 'Позиция меню не найдена' }, { status: 404 });
+    }
+
+    if (existingItem?.status.kind === 'stopped') {
+      return NextResponse.json({
+        ...updatedItem,
+        message: 'Стоп-лист обновлён',
+      });
     }
 
     return NextResponse.json(updatedItem);
