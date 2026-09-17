@@ -9,7 +9,7 @@ const initialMenu: MenuItem[] = [
     status: {
       kind: 'stopped',
       reason: 'out_of_stock',
-      until: null,
+      until: '2026-09-17T00:00:00.000Z',
     },
     updatedAt: new Date().toISOString(),
   },

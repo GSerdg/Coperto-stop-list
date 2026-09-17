@@ -28,6 +28,7 @@ export const Filters: FC = () => {
         {SHOP_TABS.map((tab) => (
           <TabButton
             key={String(tab.value)}
+            groupId="shop"
             onClick={() => setFilters({ shop: tab.value })}
             isActive={shop === tab.value}
             label={tab.label}
@@ -38,6 +39,7 @@ export const Filters: FC = () => {
         {STATUS_TABS.map((tab) => (
           <TabButton
             key={String(tab.value)}
+            groupId="status"
             onClick={() => setFilters({ status: tab.value })}
             isActive={status === tab.value}
             label={tab.label}

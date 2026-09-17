@@ -10,7 +10,7 @@ export const TabSwitcher: FC<Props> = ({ children, label }) => {
       <span className="text-brand-text/50 font-sans text-xs font-bold tracking-wider uppercase">
         {label}
       </span>
-      <div className="bg-brand-text/5 flex w-fit rounded-xl p-1">{children}</div>
+      <div className="bg-brand-text/5 relative isolate flex w-fit rounded-xl p-1">{children}</div>
     </div>
   );
 };
