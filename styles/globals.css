@@ -24,8 +24,8 @@ body {
 }
 
 body {
-  background-color: var(--brand-bg);
-  color: var(--brand-text);
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
   font-family:
     system-ui,
     -apple-system,
