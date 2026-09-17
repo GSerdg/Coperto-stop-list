@@ -3,6 +3,7 @@ import { MenuItem, Shop } from '@/types/menu';
 import { FC } from 'react';
 import { TableHeader } from './TableHeader';
 import { useStopItem } from '../../model/useStopItem';
+import { useUiStore } from '../../model/ui-store';
 
 const SHOP_LABELS: Record<Shop, string> = {
   kitchen: 'Кухня',
@@ -23,6 +24,8 @@ type Props = {
 
 export const Table: FC<Props> = ({ items }) => {
   const { resumeItem, mutatingIds } = useStopItem();
+
+  const openStopPanel = useUiStore((state) => state.openStopPanel);
 
   return (
     <div className="custom-scrollbar overflow-x-auto">
@@ -93,7 +96,7 @@ export const Table: FC<Props> = ({ items }) => {
                     fallback={
                       <button
                         disabled={isSaving}
-                        onClick={() => console.log('Открыть панель', item.id)}
+                        onClick={() => openStopPanel(item)}
                         className={`bg-brand-accent inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all ${
                           isSaving
                             ? 'bg-brand-accent/50 cursor-wait'
@@ -107,25 +110,37 @@ export const Table: FC<Props> = ({ items }) => {
                       </button>
                     }
                   >
-                    <button
-                      disabled={isOutOfStock || isSaving}
-                      onClick={() => resumeItem(item.id)}
-                      title={
-                        isOutOfStock ? 'Нельзя вернуть в продажу при нулевом остатке' : undefined
-                      }
-                      className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                        isOutOfStock
-                          ? 'border-brand-text/10 text-brand-text/30 bg-brand-text/2 cursor-not-allowed'
-                          : isSaving
-                            ? 'border-brand-text/10 text-brand-text/40 bg-brand-text/2 cursor-wait'
-                            : 'border-brand-text/20 text-brand-text hover:bg-brand-text/5 cursor-pointer'
-                      }`}
-                    >
-                      <Show when={isSaving}>
-                        <span className="btn-spinner text-xs" />
-                      </Show>
-                      Вернуть в продажу
-                    </button>
+                    <div className="inline-flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={isSaving}
+                        onClick={() => openStopPanel(item)}
+                        className={`border-brand-text/20 text-brand-text hover:bg-brand-text/5 inline-flex items-center rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+                          isSaving ? 'cursor-wait opacity-40' : 'cursor-pointer'
+                        }`}
+                      >
+                        Изменить
+                      </button>
+                      <button
+                        disabled={isOutOfStock || isSaving}
+                        onClick={() => resumeItem(item.id)}
+                        title={
+                          isOutOfStock ? 'Нельзя вернуть в продажу при нулевом остатке' : undefined
+                        }
+                        className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                          isOutOfStock
+                            ? 'border-brand-text/10 text-brand-text/30 bg-brand-text/2 cursor-not-allowed'
+                            : isSaving
+                              ? 'border-brand-text/10 text-brand-text/40 bg-brand-text/2 cursor-wait'
+                              : 'border-brand-text/20 text-brand-text hover:bg-brand-text/5 cursor-pointer'
+                        }`}
+                      >
+                        <Show when={isSaving}>
+                          <span className="btn-spinner text-xs" />
+                        </Show>
+                        Вернуть в продажу
+                      </button>
+                    </div>
                   </Show>
                 </td>
               </tr>

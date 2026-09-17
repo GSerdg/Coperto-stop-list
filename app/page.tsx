@@ -1,10 +1,8 @@
-import { Filters, StopListTable } from '@/features/stop-list/ui';
-import { type SearchParams } from 'nuqs/server';
-import { Suspense } from 'react';
+import { Filters, StopListTable, StopReasonPanel } from '@/features/stop-list/ui';
 
 export default async function Page() {
   return (
-    <main className="mx-auto min-h-screen max-w-[1280px] px-6 py-8">
+    <main className="mx-auto min-h-screen max-w-7xl px-6 py-8">
       <header className="border-brand-text/10 mb-8 flex items-center justify-between border-b pb-6">
         <div>
           <div className="flex items-center gap-3">
@@ -28,6 +26,7 @@ export default async function Page() {
           <StopListTable />
         </div>
       </div>
+      <StopReasonPanel />
     </main>
   );
 }

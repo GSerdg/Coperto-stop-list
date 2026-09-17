@@ -12,3 +12,16 @@ export function simulateServerError(
 
   return null;
 }
+
+export function formatISOToLocalInput(isoString: string | null): string | null {
+  if (!isoString) return null;
+
+  const date = new Date(isoString);
+
+  if (Number.isNaN(date.getTime())) return null;
+
+  const timezoneOffsetMs = date.getTimezoneOffset() * 60000;
+  const localDate = new Date(date.getTime() - timezoneOffsetMs);
+
+  return localDate.toISOString().slice(0, 16);
+}
